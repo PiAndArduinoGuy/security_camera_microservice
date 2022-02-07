@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from properties.validation.properties_validator import PropertiesValidator
 
 
-class RabbitMqProperties(ABC):
+class SecurityCameraProperties(ABC):
     def __init__(self):
         self._rabbitmq_host_ip = None
         self._security_config_exchange_name = None

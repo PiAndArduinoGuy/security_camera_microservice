@@ -5,7 +5,7 @@ import time
 import pika
 from pika.exceptions import AMQPConnectionError
 
-from properties.rabbitmq_properties import RabbitMqProperties
+from properties.security_camera_properties import SecurityCameraProperties
 from security_config_receiver import SecurityConfigReceiver
 
 LOGGER = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ LOGGER = logging.getLogger(__name__)
 
 class SecurityConfigSubscriber(SecurityConfigReceiver):
     def __init__(self,
-                 rabbitmq_properties: RabbitMqProperties):
+                 rabbitmq_properties: SecurityCameraProperties):
         self.rabbitmq_properties = rabbitmq_properties
         self.received_security_config = None
 
