@@ -6,7 +6,7 @@ import pika
 from pika.exceptions import AMQPConnectionError
 
 from properties.security_camera_properties import SecurityCameraProperties
-from security_config_receiver import SecurityConfigReceiver
+from subject.security_config_receiver import SecurityConfigReceiver
 
 LOGGER = logging.getLogger(__name__)
 
@@ -14,6 +14,7 @@ LOGGER = logging.getLogger(__name__)
 class SecurityConfigSubscriber(SecurityConfigReceiver):
     def __init__(self,
                  security_camera_properties: SecurityCameraProperties):
+        super().__init__()
         self.rabbitmq_properties = security_camera_properties
         self.received_security_config = None
 
@@ -54,3 +55,4 @@ class SecurityConfigSubscriber(SecurityConfigReceiver):
         security_config = json.loads(security_config_string)
         self.received_security_config = security_config
         LOGGER.info("New security config received: %s", security_config)
+        self.set_state(security_config)
