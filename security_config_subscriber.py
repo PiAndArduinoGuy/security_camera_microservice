@@ -13,8 +13,8 @@ LOGGER = logging.getLogger(__name__)
 
 class SecurityConfigSubscriber(SecurityConfigReceiver):
     def __init__(self,
-                 rabbitmq_properties: SecurityCameraProperties):
-        self.rabbitmq_properties = rabbitmq_properties
+                 security_camera_properties: SecurityCameraProperties):
+        self.rabbitmq_properties = security_camera_properties
         self.received_security_config = None
 
     def receive_security_config(self):
