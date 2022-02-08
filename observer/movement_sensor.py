@@ -8,7 +8,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class MovementSensor(Observer):
-    def __init__(self, subject: Subject):
+    def __init__(self,
+                 subject: Subject):
         super().__init__(subject)
         self.subject.add_observer(self)
 
