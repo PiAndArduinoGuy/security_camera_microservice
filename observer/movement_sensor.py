@@ -1,5 +1,6 @@
 import base64
 import logging
+from threading import Thread
 
 from gpiozero import MotionSensor, LED
 from picamera import PiCamera
@@ -23,16 +24,21 @@ class MovementSensor(Observer):
                                         threshold=security_camera_properties.get_pir_threshold())
         self._led = LED(security_camera_properties.get_led_pin())
         self._camera = PiCamera()
+        self._is_enabled = False
+        self._perform_detection_thread = Thread(name="perform_detection_thread",
+                                                target=self.perform_detection)
 
     def update(self):
         security_config = self.subject.get_state()
         security_state = security_config["securityState"]
         if security_state == 'ARMED':
             LOGGER.info("Security state is ARMED, motion detecting will be enabled.")
-            while True:
-                self.perform_detection()
+            self._is_enabled = True
+            if not self._perform_detection_thread.is_alive():
+                self._perform_detection_thread.start()
         elif security_state == 'DISARMED':
             LOGGER.info("Security state is DISARMED, motion detecting will be disabled.")
+            self._is_enabled = False
 
     def perform_detection(self):
         def get_base64_encoded_image():
@@ -40,11 +46,15 @@ class MovementSensor(Observer):
                 new_capture_binary_data = new_capture_file.read()
                 return base64.b64encode(new_capture_binary_data)
 
-        self._pir_sensor.wait_for_motion()
-        LOGGER.info("Motion detected.")
+        LOGGER.info("Motion detection started.")
+        while self._is_enabled:
+            self._pir_sensor.wait_for_motion()
+            LOGGER.info("Motion detected.")
 
-        self._capture_image()
-        self._trigger_visual_indicator()
+            self._capture_image()
+            self._trigger_visual_indicator()
+
+        LOGGER.info("Motion detection stopped.")
 
     def _capture_image(self):
         LOGGER.info("Capturing image.")
