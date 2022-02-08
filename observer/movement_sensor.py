@@ -1,22 +1,66 @@
 import base64
 import logging
 
+from gpiozero import MotionSensor, LED
+from picamera import PiCamera
+
 from observer_design_pattern.observer import Observer
 from observer_design_pattern.subject import Subject
+from properties.security_camera_properties import SecurityCameraProperties
 
 LOGGER = logging.getLogger(__name__)
 
 
 class MovementSensor(Observer):
     def __init__(self,
-                 subject: Subject):
+                 subject: Subject,
+                 security_camera_properties: SecurityCameraProperties):
         super().__init__(subject)
         self.subject.add_observer(self)
+        self._pir_sensor = MotionSensor(pin=security_camera_properties.get_pir_sensor_pin(),
+                                        queue_len=security_camera_properties.get_pir_num_readings(),
+                                        sample_rate=security_camera_properties.get_pir_detections_per_second(),
+                                        threshold=security_camera_properties.get_pir_threshold())
+        self._led = LED(security_camera_properties.get_led_pin())
+        self._camera = PiCamera()
 
     def update(self):
         security_config = self.subject.get_state()
         security_state = security_config["securityState"]
         if security_state == 'ARMED':
             LOGGER.info("Security state is ARMED, motion detecting will be enabled.")
+            while True:
+                self.perform_detection()
         elif security_state == 'DISARMED':
             LOGGER.info("Security state is DISARMED, motion detecting will be disabled.")
+
+    def perform_detection(self):
+        def get_base64_encoded_image():
+            with open(file="./new_capture.jpeg", mode="rb") as new_capture_file:
+                new_capture_binary_data = new_capture_file.read()
+                return base64.b64encode(new_capture_binary_data)
+
+        self._pir_sensor.wait_for_motion()
+        LOGGER.info("Motion detected.")
+
+        self._capture_image()
+        self._trigger_visual_indicator()
+
+    def _capture_image(self):
+        LOGGER.info("Capturing image.")
+        self._camera.capture(f"./new_capture.jpeg")
+
+    def _trigger_visual_indicator(self):
+        LOGGER.info("Turn LED on.")
+        self._led.on()
+        self._pir_sensor.wait_for_no_motion()  # keep the led on while motion detected
+        LOGGER.info("Turn LED off.")
+        self._led.off()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print("Closing PIR MotionSensor, LED and camera resources.")
+        self._pir_sensor.close()
+        self._led.off()
+        self._led.close()
+        self._camera.close()
+        print("Connections closed.")

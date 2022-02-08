@@ -9,5 +9,6 @@ if __name__ == '__main__':
     security_camera_properties: SecurityCameraProperties = SecurityCameraCommandLineProperties()
     logging_setup = LoggingSetup(security_camera_properties.get_logging_file_location())
     security_config_receiver: SecurityConfigReceiver = SecurityConfigSubscriber(security_camera_properties)
-    movement_sensor = MovementSensor(security_config_receiver)
+    movement_sensor = MovementSensor(security_config_receiver,
+                                     security_camera_properties)
     security_config_receiver.receive_security_config()
