@@ -24,21 +24,25 @@ class MovementSensor(Observer):
                                         threshold=security_camera_properties.get_pir_threshold())
         self._led = LED(security_camera_properties.get_led_pin())
         self._camera = PiCamera()
-        self._is_enabled = False
-        self._perform_detection_thread = Thread(name="perform_detection_thread",
-                                                target=self.perform_detection)
+        self._is_armed = False
+        self._has_active_thread = False
 
     def update(self):
         security_config = self.subject.get_state()
         security_state = security_config["securityState"]
         if security_state == 'ARMED':
             LOGGER.info("Security state is ARMED, motion detecting will be enabled.")
-            self._is_enabled = True
-            if not self._perform_detection_thread.is_alive():
-                self._perform_detection_thread.start()
+            self._is_armed = True
+            if not self._has_active_thread:
+                self._has_active_thread = True
+                perform_detection_thread = Thread(name="perform_detection_thread",
+                                                  target=self.perform_detection)
+                perform_detection_thread.start()
+            else:
+                LOGGER.info("There is currently an active thread, a new one will not be created.")
         elif security_state == 'DISARMED':
             LOGGER.info("Security state is DISARMED, motion detecting will be disabled.")
-            self._is_enabled = False
+            self._is_armed = False
 
     def perform_detection(self):
         def get_base64_encoded_image():
@@ -47,7 +51,7 @@ class MovementSensor(Observer):
                 return base64.b64encode(new_capture_binary_data)
 
         LOGGER.info("Motion detection started.")
-        while self._is_enabled:
+        while self._is_armed:
             self._pir_sensor.wait_for_motion()
             LOGGER.info("Motion detected.")
 
@@ -55,6 +59,7 @@ class MovementSensor(Observer):
             self._trigger_visual_indicator()
 
         LOGGER.info("Motion detection stopped.")
+        self._has_active_thread = False
 
     def _capture_image(self):
         LOGGER.info("Capturing image.")
