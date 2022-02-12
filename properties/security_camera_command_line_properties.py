@@ -13,6 +13,7 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
         parser.add_argument("--logging_file_location", required=True)
         parser.add_argument("--security_micro_service_host_ip", required=True)
         parser.add_argument("--security_micro_service_host_port", required=True)
+        parser.add_argument("--security_micro_service_context_path", required=True)
         parser.add_argument("--pir_sensor_pin")
         parser.add_argument("--pir_num_readings")
         parser.add_argument("--pir_detections_per_second")
@@ -68,3 +69,6 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
 
     def set_security_micro_service_host_port(self):
         self._security_micro_service_host_port = self.arguments["security_micro_service_host_port"]
+
+    def set_security_micro_service_context_path(self):
+        self._security_micro_service_context_path = self.arguments["security_micro_service_context_path"]

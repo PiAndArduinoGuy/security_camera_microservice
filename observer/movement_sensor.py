@@ -8,6 +8,7 @@ from picamera import PiCamera
 from observer_design_pattern.observer import Observer
 from observer_design_pattern.subject import Subject
 from properties.security_camera_properties import SecurityCameraProperties
+from web.security_micro_service_web_client import SecurityMicroServiceWebClient
 
 LOGGER = logging.getLogger(__name__)
 
@@ -15,7 +16,8 @@ LOGGER = logging.getLogger(__name__)
 class MovementSensor(Observer):
     def __init__(self,
                  subject: Subject,
-                 security_camera_properties: SecurityCameraProperties):
+                 security_camera_properties: SecurityCameraProperties,
+                 security_micro_service_web_client: SecurityMicroServiceWebClient):
         super().__init__(subject)
         self.subject.add_observer(self)
         self._pir_sensor = MotionSensor(pin=security_camera_properties.get_pir_sensor_pin(),
@@ -26,6 +28,7 @@ class MovementSensor(Observer):
         self._camera = PiCamera()
         self._is_armed = False
         self._has_active_thread = False
+        self._security_micro_service_web_client = security_micro_service_web_client
 
     def update(self):
         security_config = self.subject.get_state()
@@ -57,6 +60,7 @@ class MovementSensor(Observer):
 
             self._capture_image()
             self._trigger_visual_indicator()
+            self._security_micro_service_web_client.send_image_for_security_check(get_base64_encoded_image())
 
         LOGGER.info("Motion detection stopped.")
         self._has_active_thread = False

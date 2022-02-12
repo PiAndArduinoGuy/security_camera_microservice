@@ -16,6 +16,7 @@ class SecurityCameraProperties(ABC):
         self._led_pin = None
         self._security_micro_service_host_ip = None
         self._security_micro_service_host_port = None
+        self._security_micro_service_context_path = None
 
     def get_rabbitmq_host_ip(self):
         PropertiesValidator.validate_property_non_none(self._rabbitmq_host_ip)
@@ -61,6 +62,10 @@ class SecurityCameraProperties(ABC):
         PropertiesValidator.validate_property_non_none(self._security_micro_service_host_port)
         return self._security_micro_service_host_port
 
+    def get_security_micro_service_context_path(self):
+        PropertiesValidator.validate_property_non_none(self._security_micro_service_context_path)
+        return self._security_micro_service_context_path
+
     @abstractmethod
     def set_rabbitmq_host_ip(self):
         pass
@@ -105,6 +110,10 @@ class SecurityCameraProperties(ABC):
     def set_security_micro_service_host_port(self):
         pass
 
+    @abstractmethod
+    def set_security_micro_service_context_path(self):
+        pass
+
     def set_rabbitmq_properties(self):
         self.set_rabbitmq_host_ip()
         self.set_security_config_queue_name()
@@ -117,3 +126,4 @@ class SecurityCameraProperties(ABC):
         self.set_led_pin()
         self.set_security_micro_service_host_port()
         self.set_security_micro_service_host_ip()
+        self.set_security_micro_service_context_path()
