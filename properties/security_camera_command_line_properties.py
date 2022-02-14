@@ -14,6 +14,7 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
         parser.add_argument("--security_micro_service_host_ip", required=True)
         parser.add_argument("--security_micro_service_host_port", required=True)
         parser.add_argument("--security_micro_service_context_path", required=True)
+        parser.add_argument("--security_camera_microservice_capture_directory", required=True)
         parser.add_argument("--pir_sensor_pin")
         parser.add_argument("--pir_num_readings")
         parser.add_argument("--pir_detections_per_second")
@@ -72,3 +73,6 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
 
     def set_security_micro_service_context_path(self):
         self._security_micro_service_context_path = self.arguments["security_micro_service_context_path"]
+
+    def set_security_camera_microservice_capture_directory(self):
+        self._led_pin = self.arguments["security_camera_microservice_capture_directory"]

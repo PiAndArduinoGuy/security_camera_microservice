@@ -29,6 +29,8 @@ class MovementSensor(Observer):
         self._is_armed = False
         self._has_active_thread = False
         self._security_micro_service_web_client = security_micro_service_web_client
+        self._get_security_camera_microservice_capture_directory = \
+            security_camera_properties.get_security_camera_microservice_capture_directory()
 
     def update(self):
         security_config = self.subject.get_state()
@@ -67,7 +69,7 @@ class MovementSensor(Observer):
 
     def _capture_image(self):
         LOGGER.info("Capturing image.")
-        self._camera.capture(f"./new_capture.jpeg")
+        self._camera.capture(f"{self._get_security_camera_microservice_capture_directory}/new_capture.jpeg")
 
     def _trigger_visual_indicator(self):
         LOGGER.info("Turn LED on.")
