@@ -29,7 +29,7 @@ class MovementSensor(Observer):
         self._is_armed = False
         self._has_active_thread = False
         self._security_micro_service_web_client = security_micro_service_web_client
-        self._get_security_camera_microservice_capture_directory = \
+        self.security_camera_microservice_capture_directory = \
             security_camera_properties.get_security_camera_microservice_capture_directory()
 
     def update(self):
@@ -51,7 +51,7 @@ class MovementSensor(Observer):
 
     def perform_detection(self):
         def get_base64_encoded_image():
-            with open(file="./new_capture.jpeg", mode="rb") as new_capture_file:
+            with open(file=f"{self.security_camera_microservice_capture_directory}/new_capture.jpeg", mode="rb") as new_capture_file:
                 new_capture_binary_data = new_capture_file.read()
                 return base64.b64encode(new_capture_binary_data)
 
@@ -69,7 +69,7 @@ class MovementSensor(Observer):
 
     def _capture_image(self):
         LOGGER.info("Capturing image.")
-        self._camera.capture(f"{self._get_security_camera_microservice_capture_directory}/new_capture.jpeg")
+        self._camera.capture(f"{self.security_camera_microservice_capture_directory}/new_capture.jpeg")
 
     def _trigger_visual_indicator(self):
         LOGGER.info("Turn LED on.")

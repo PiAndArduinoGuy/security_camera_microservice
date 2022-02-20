@@ -69,6 +69,7 @@ class SecurityCameraProperties(ABC):
 
     def get_security_camera_microservice_capture_directory(self):
         PropertiesValidator.validate_property_non_none(self._security_camera_microservice_capture_directory)
+        return self._security_camera_microservice_capture_directory
 
     @abstractmethod
     def set_rabbitmq_host_ip(self):
