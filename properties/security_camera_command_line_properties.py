@@ -75,4 +75,4 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
         self._security_micro_service_context_path = self.arguments["security_micro_service_context_path"]
 
     def set_security_camera_microservice_capture_directory(self):
-        self._led_pin = self.arguments["security_camera_microservice_capture_directory"]
+        self._security_camera_microservice_capture_directory = self.arguments["security_camera_microservice_capture_directory"]
