@@ -1,0 +1,11 @@
+services:
+  app:
+    image: piandarduinoguy/security-camera-micro-service
+    devices:
+      - /dev/vchiq:/dev/vchiq # expose camera device to the docker container
+      - ~/tmp:/security_camera_microservice/output
+    volumes:
+      - /opt/vc:/opt/vc # make dependencies needed by PiCamera available to it, located at /opt/vc on the RaspberryPi
+    environment:
+      LD_LIBRARY_PATH: /opt/vc/lib # having access to the PiCamera dependencies, instruct OS to look in the lib directory
+    privileged: true
