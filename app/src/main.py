@@ -8,7 +8,7 @@ from web.security_micro_service_web_client import SecurityMicroServiceWebClient
 
 if __name__ == '__main__':
     security_camera_properties: SecurityCameraProperties = SecurityCameraEnvironmentVariableProperties()
-    logging_setup = LoggingSetup(security_camera_properties.get_logging_file_location())
+    logging_setup = LoggingSetup(security_camera_properties.get_logging_file_directory())
     security_config_receiver: SecurityConfigReceiver = SecurityConfigSubscriber(security_camera_properties)
     security_micro_service_web_client = SecurityMicroServiceWebClient(security_camera_properties)
     movement_sensor = MovementSensor(security_config_receiver,
