@@ -21,8 +21,8 @@ class SecurityCameraEnvironmentVariableProperties(SecurityCameraProperties):
     def set_security_config_queue_name(self):
         self._security_config_queue_name = environ["SECURITY_CONFIG_QUEUE_NAME"]
 
-    def set_logging_property_file(self):
-        self._logging_property_file = environ["LOGGING_PROPERTY_FILE"]
+    def set_logging_file_directory(self):
+        self._logging_file_directory = environ["LOGGING_FILE_DIRECTORY"]
 
     def set_pir_sensor_pin(self):
         self._pir_sensor_pin = environ["PIR_SENSOR_PIN"]

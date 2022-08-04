@@ -84,7 +84,7 @@ class SecurityCameraProperties(ABC):
         pass
 
     @abstractmethod
-    def set_logging_property_file(self):
+    def set_logging_file_directory(self):
         pass
 
     @abstractmethod
@@ -127,7 +127,7 @@ class SecurityCameraProperties(ABC):
         self.set_rabbitmq_host_ip()
         self.set_security_config_queue_name()
         self.set_security_config_exchange_name()
-        self.set_logging_property_file()
+        self.set_logging_file_directory()
         self.set_pir_sensor_pin()
         self.set_pir_threshold()
         self.set_pir_detections_per_second()

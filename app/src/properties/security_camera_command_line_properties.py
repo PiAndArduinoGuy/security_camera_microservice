@@ -32,7 +32,7 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
     def set_security_config_queue_name(self):
         self._security_config_exchange_name = self.arguments["security_config_exchange_name"]
 
-    def set_logging_property_file(self):
+    def set_logging_file_directory(self):
         self._logging_file_directory = self.arguments["logging_file_directory"]
 
     def set_pir_sensor_pin(self):
