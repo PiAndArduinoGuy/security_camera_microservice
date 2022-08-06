@@ -1,0 +1,21 @@
+services:
+  security-camera-micro-service:
+    image: piandarduinoguy/security-camera-micro-service
+    volumes:
+      - /usr/lib:/usr/lib # shared libraries needed for raspberry pi camera exist here
+    environment:
+      LD_LIBRARY_PATH: /usr/lib/arm-linux-gnueabihf # make shared libraries available
+      SECURITY_CONFIG_EXCHANGE_NAME: fanout_exchange
+      SECURITY_CONFIG_QUEUE_NAME: updated.security.config
+      LOGGING_FILE_DIRECTORY: /logs
+      PIR_SENSOR_PIN: 4
+      PIR_NUM_READINGS: 10
+      PIR_DETECTIONS_PER_SECOND: 5
+      PIR_THRESHOLD: 0.2
+      LED_PIN: 26
+      SECURITY_MICRO_SERVICE_HOST_IP: 192.168.3.153
+      SECURITY_MICRO_SERVICE_HOST_PORT: 8082
+      SECURITY_MICRO_SERVICE_CONTEXT_PATH: /security
+      SECURITY_CAMERA_MICROSERVICE_CAPTURE_DIRECTORY: /captures
+
+    privileged: true
