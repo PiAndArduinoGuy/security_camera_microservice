@@ -1,14 +1,10 @@
 services:
-  app:
+  security-camera-micro-service:
     image: piandarduinoguy/security-camera-micro-service
-    devices:
-      - /dev/vchiq:/dev/vchiq # expose camera device to the docker container
     volumes:
-      - /opt/vc:/opt/vc # make dependencies needed by PiCamera available to it, located at /opt/vc on the RaspberryPi
-      - /usr/lib:/usr/lib
+      - /usr/lib:/usr/lib # shared libraries needed for raspberry pi camera exist here
     environment:
-      LD_LIBRARY_PATH: /opt/vc/lib # having access to the PiCamera dependencies, instruct OS to look in the lib directory
-      RABBITMQ_HOST_IP:
+      LD_LIBRARY_PATH: /usr/lib/arm-linux-gnueabihf # make shared libraries available
       SECURITY_CONFIG_EXCHANGE_NAME: fanout_exchange
       SECURITY_CONFIG_QUEUE_NAME: updated.security.config
       LOGGING_FILE_DIRECTORY: /logs
