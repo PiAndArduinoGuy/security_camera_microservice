@@ -1,5 +1,6 @@
 import base64
 import logging
+import os
 from threading import Thread
 
 from gpiozero import MotionSensor, LED
@@ -20,10 +21,10 @@ class MovementSensor(Observer):
                  security_micro_service_web_client: SecurityMicroServiceWebClient):
         super().__init__(subject)
         self.subject.add_observer(self)
-        self._pir_sensor = MotionSensor(pin=security_camera_properties.get_pir_sensor_pin(),
-                                        queue_len=security_camera_properties.get_pir_num_readings(),
-                                        sample_rate=security_camera_properties.get_pir_detections_per_second(),
-                                        threshold=security_camera_properties.get_pir_threshold())
+        self._pir_sensor = MotionSensor(pin=int(security_camera_properties.get_pir_sensor_pin()),
+                                        queue_len=int(security_camera_properties.get_pir_num_readings()),
+                                        sample_rate=int(security_camera_properties.get_pir_detections_per_second()),
+                                        threshold=float(security_camera_properties.get_pir_threshold()))
         self._led = LED(security_camera_properties.get_led_pin())
         self._camera = PiCamera()
         self._is_armed = False
@@ -31,6 +32,9 @@ class MovementSensor(Observer):
         self._security_micro_service_web_client = security_micro_service_web_client
         self.security_camera_microservice_capture_directory = \
             security_camera_properties.get_security_camera_microservice_capture_directory()
+        os.makedirs(f"{os.getcwd()}{self.security_camera_microservice_capture_directory}")
+        LOGGER.info(f"{os.getcwd()}{self.security_camera_microservice_capture_directory} capture directory created.")
+
 
     def update(self):
         security_config = self.subject.get_state()
@@ -51,7 +55,7 @@ class MovementSensor(Observer):
 
     def perform_detection(self):
         def get_base64_encoded_image():
-            with open(file=f"{self.security_camera_microservice_capture_directory}/new_capture.jpeg", mode="rb") as new_capture_file:
+            with open(file=f"{os.getcwd()}{self.security_camera_microservice_capture_directory}/new_capture.jpeg", mode="rb") as new_capture_file:
                 new_capture_binary_data = new_capture_file.read()
                 return base64.b64encode(new_capture_binary_data)
 
@@ -69,7 +73,7 @@ class MovementSensor(Observer):
 
     def _capture_image(self):
         LOGGER.info("Capturing image.")
-        self._camera.capture(f"{self.security_camera_microservice_capture_directory}/new_capture.jpeg")
+        self._camera.capture(f"{os.getcwd()}/{self.security_camera_microservice_capture_directory}/new_capture.jpeg")
 
     def _trigger_visual_indicator(self):
         LOGGER.info("Turn LED on.")

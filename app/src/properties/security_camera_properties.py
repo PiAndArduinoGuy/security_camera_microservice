@@ -8,7 +8,7 @@ class SecurityCameraProperties(ABC):
         self._rabbitmq_host_ip = None
         self._security_config_exchange_name = None
         self._security_config_queue_name = None
-        self._logging_file_location = None
+        self._logging_file_directory = None
         self._pir_sensor_pin = None
         self._pir_num_readings = None
         self._pir_detections_per_second = None
@@ -31,9 +31,9 @@ class SecurityCameraProperties(ABC):
         PropertiesValidator.validate_property_non_none(self._security_config_queue_name)
         return self._security_config_queue_name
 
-    def get_logging_file_location(self):
-        PropertiesValidator.validate_property_non_none(self._logging_file_location)
-        return self._logging_file_location
+    def get_logging_file_directory(self):
+        PropertiesValidator.validate_property_non_none(self._logging_file_directory)
+        return self._logging_file_directory
 
     def get_pir_sensor_pin(self):
         PropertiesValidator.validate_property_non_none(self._pir_sensor_pin)
@@ -84,7 +84,7 @@ class SecurityCameraProperties(ABC):
         pass
 
     @abstractmethod
-    def set_logging_property_file(self):
+    def set_logging_file_directory(self):
         pass
 
     @abstractmethod
@@ -127,7 +127,7 @@ class SecurityCameraProperties(ABC):
         self.set_rabbitmq_host_ip()
         self.set_security_config_queue_name()
         self.set_security_config_exchange_name()
-        self.set_logging_property_file()
+        self.set_logging_file_directory()
         self.set_pir_sensor_pin()
         self.set_pir_threshold()
         self.set_pir_detections_per_second()

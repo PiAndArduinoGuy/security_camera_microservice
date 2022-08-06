@@ -10,7 +10,7 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
         parser.add_argument("--rabbitmq_host_ip", required=True)
         parser.add_argument("--security_config_queue_name", required=True)
         parser.add_argument("--security_config_exchange_name", required=True)
-        parser.add_argument("--logging_file_location", required=True)
+        parser.add_argument("--logging_file_directory", required=True)
         parser.add_argument("--security_micro_service_host_ip", required=True)
         parser.add_argument("--security_micro_service_host_port", required=True)
         parser.add_argument("--security_micro_service_context_path", required=True)
@@ -32,8 +32,8 @@ class SecurityCameraCommandLineProperties(SecurityCameraProperties):
     def set_security_config_queue_name(self):
         self._security_config_exchange_name = self.arguments["security_config_exchange_name"]
 
-    def set_logging_property_file(self):
-        self._logging_file_location = self.arguments["logging_file_location"]
+    def set_logging_file_directory(self):
+        self._logging_file_directory = self.arguments["logging_file_directory"]
 
     def set_pir_sensor_pin(self):
         if self.arguments['pir_sensor_pin'] is not None:
