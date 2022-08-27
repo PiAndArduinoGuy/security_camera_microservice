@@ -21,6 +21,7 @@ services:
     networks:
       security-network:
     privileged: true
+    restart: always
 networks:
   security-network:
     name: security-network

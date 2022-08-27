@@ -32,8 +32,14 @@ class MovementSensor(Observer):
         self._security_micro_service_web_client = security_micro_service_web_client
         self.security_camera_microservice_capture_directory = \
             security_camera_properties.get_security_camera_microservice_capture_directory()
-        os.makedirs(f"{os.getcwd()}{self.security_camera_microservice_capture_directory}")
-        LOGGER.info(f"{os.getcwd()}{self.security_camera_microservice_capture_directory} capture directory created.")
+        try:
+            os.makedirs(f"{os.getcwd()}{self.security_camera_microservice_capture_directory}")
+            LOGGER.info(
+                f"{os.getcwd()}{self.security_camera_microservice_capture_directory} capture directory created.")
+        except FileExistsError:
+            LOGGER.info(
+                f"{os.getcwd()}{self.security_camera_microservice_capture_directory} capture directory already exists.")
+
 
 
     def update(self):
