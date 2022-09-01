@@ -1,6 +1,6 @@
 services:
   security-camera-micro-service:
-    image: piandarduinoguy/security-camera-micro-service:20220427
+    image: piandarduinoguy/security-camera-micro-service:20220829
     volumes:
       - /usr/lib:/usr/lib # shared libraries needed for raspberry pi camera exist here
     environment:
